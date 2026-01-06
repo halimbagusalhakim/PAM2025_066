@@ -49,7 +49,7 @@ interface ApiService {
     @DELETE("merk/delete.php")
     suspend fun deleteMerk(
         @Header("Authorization") token: String,
-        @Query("merk_id") merkId: Int
+        @Query("id") merkId: Int
     ): Response<BaseResponse>
 
     // ==================== PRODUK ====================
@@ -59,7 +59,7 @@ interface ApiService {
     @GET("produk/detail.php")
     suspend fun getDetailProduk(
         @Header("Authorization") token: String,
-        @Query("produk_id") produkId: Int
+        @Query("id") produkId: Int
     ): Response<ProdukResponse>
 
     @POST("produk/create.php")
@@ -83,7 +83,7 @@ interface ApiService {
     @DELETE("produk/delete.php")
     suspend fun deleteProduk(
         @Header("Authorization") token: String,
-        @Query("produk_id") produkId: Int
+        @Query("id") produkId: Int
     ): Response<BaseResponse>
 
     // ==================== PENJUALAN ====================
@@ -93,7 +93,7 @@ interface ApiService {
     @GET("penjualan/detail.php")
     suspend fun getDetailPenjualan(
         @Header("Authorization") token: String,
-        @Query("penjualan_id") penjualanId: Int
+        @Query("id") penjualanId: Int
     ): Response<PenjualanResponse>
 
     @POST("penjualan/create.php")
@@ -111,6 +111,6 @@ interface ApiService {
     @DELETE("penjualan/delete.php")
     suspend fun deletePenjualan(
         @Header("Authorization") token: String,
-        @Query("penjualan_id") penjualanId: Int
+        @Query("id") penjualanId: Int
     ): Response<BaseResponse>
 }
