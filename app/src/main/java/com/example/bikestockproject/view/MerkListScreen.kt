@@ -22,15 +22,13 @@ import com.example.bikestockproject.viewmodel.MerkListUiState
 import com.example.bikestockproject.viewmodel.MerkListViewModel
 import com.example.bikestockproject.viewmodel.provider.PenyediaViewModel
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MerkListScreen(
     navigateToMerkEntry: () -> Unit,
     navigateToMerkEdit: (Int) -> Unit,
     navigateBack: () -> Unit,
-    navigateToProdukByMerk: (Int) -> Unit, // Tambahan parameter
+    navigateToProdukByMerk: (Int, String) -> Unit,
     viewModel: MerkListViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val context = LocalContext.current
@@ -39,9 +37,7 @@ fun MerkListScreen(
 
     var merkToDelete by remember { mutableStateOf<MerkModel?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var showManageMerkDialog by remember { mutableStateOf(false) }
 
-    // Load data when token is available
     LaunchedEffect(token) {
         token?.let {
             if (it.isNotEmpty()) {
@@ -50,7 +46,6 @@ fun MerkListScreen(
         }
     }
 
-    // Observe delete state
     LaunchedEffect(viewModel.deleteMerkUiState) {
         when (val state = viewModel.deleteMerkUiState) {
             is DeleteMerkUiState.Success -> {
@@ -66,14 +61,14 @@ fun MerkListScreen(
         }
     }
 
-    // Delete Confirmation Dialog
     if (showDeleteDialog && merkToDelete != null) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
+            icon = { Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
             title = { Text("Hapus Merk") },
             text = { Text("Yakin ingin menghapus merk ${merkToDelete?.namaMerk}?") },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         showDeleteDialog = false
                         token?.let {
@@ -81,36 +76,17 @@ fun MerkListScreen(
                                 viewModel.deleteMerk(it, id)
                             }
                         }
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
                 ) {
-                    Text("Ya")
+                    Text("Hapus")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Tidak")
-                }
-            }
-        )
-    }
-
-    // Manage Merk Dialog
-    if (showManageMerkDialog) {
-        AlertDialog(
-            onDismissRequest = { showManageMerkDialog = false },
-            title = { Text("Kelola Merk") },
-            text = { Text("Pilih aksi untuk mengelola data merk") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showManageMerkDialog = false
-                    navigateToMerkEntry()
-                }) {
-                    Text("Tambah Merk Baru")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showManageMerkDialog = false }) {
-                    Text("Tutup")
+                OutlinedButton(onClick = { showDeleteDialog = false }) {
+                    Text("Batal")
                 }
             }
         )
@@ -119,18 +95,30 @@ fun MerkListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Pilih Merk Produk") },
+                title = {
+                    Column {
+                        Text("Pilih Merk", fontWeight = FontWeight.Bold)
+                        Text(
+                            "Pilih merk untuk melihat produk",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
                     }
-                },
-                actions = {
-                    IconButton(onClick = { showManageMerkDialog = true }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Kelola Merk")
-                    }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToMerkEntry,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Tambah Merk")
+            }
         }
     ) { paddingValues ->
         when (val state = viewModel.merkListUiState) {
@@ -152,7 +140,19 @@ fun MerkListScreen(
                             .padding(paddingValues),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Belum ada data merk")
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Default.Info,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                "Belum ada data merk",
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            )
+                        }
                     }
                 } else {
                     LazyColumn(
@@ -165,10 +165,7 @@ fun MerkListScreen(
                         items(state.merkList) { merk ->
                             MerkCardSelectable(
                                 merk = merk,
-                                onClick = { navigateToProdukByMerk(merk.merkId!!) },
-                                onManage = {
-                                    // Show bottom sheet or dialog for edit/delete
-                                },
+                                onClick = { navigateToProdukByMerk(merk.merkId!!, merk.namaMerk) },
                                 onEdit = { navigateToMerkEdit(merk.merkId!!) },
                                 onDelete = {
                                     merkToDelete = merk
@@ -186,7 +183,16 @@ fun MerkListScreen(
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(state.message)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Default.Warning,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(state.message, color = MaterialTheme.colorScheme.error)
+                    }
                 }
             }
         }
@@ -197,7 +203,6 @@ fun MerkListScreen(
 fun MerkCardSelectable(
     merk: MerkModel,
     onClick: () -> Unit,
-    onManage: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -205,12 +210,15 @@ fun MerkCardSelectable(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        onClick = onClick
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -218,12 +226,20 @@ fun MerkCardSelectable(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -234,8 +250,8 @@ fun MerkCardSelectable(
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Lihat produk →",
-                        fontSize = 12.sp,
+                        text = "Ketuk untuk lihat produk →",
+                        fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -261,7 +277,7 @@ fun MerkCardSelectable(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Hapus Merk") },
+                        text = { Text("Hapus Merk", color = MaterialTheme.colorScheme.error) },
                         onClick = {
                             showMenu = false
                             onDelete()

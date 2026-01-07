@@ -39,6 +39,7 @@ import com.example.bikestockproject.view.ProdukStokScreen
 import com.example.bikestockproject.view.SplashScreen
 
 
+
 @Composable
 fun BikeStockApp(
     navController: NavHostController = rememberNavController(),
@@ -100,9 +101,8 @@ fun HostNavigasi(
                     navController.navigate("${DestinasiMerkEdit.route}/$merkId")
                 },
                 navigateBack = { navController.navigateUp() },
-                navigateToProdukByMerk = { merkId ->
-                    // Dapatkan nama merk dari state atau pass sebagai argument
-                    navController.navigate("${DestinasiProdukList.route}?merkId=$merkId&merkName=Merk")
+                navigateToProdukByMerk = { merkId, merkName ->
+                    navController.navigate("${DestinasiProdukList.route}?merkId=$merkId&merkName=$merkName")
                 }
             )
         }
