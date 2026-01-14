@@ -78,6 +78,34 @@ class PenjualanFormViewModel(
         }
     }
 
+    fun loadPenjualanData(token: String) {
+        if (penjualanId == null) return
+
+        viewModelScope.launch {
+            penjualanFormUiState = PenjualanFormUiState.Loading
+
+            repositoryPenjualan.getDetailPenjualan(token, penjualanId)
+                .onSuccess { penjualan ->
+                    // Masukkan data lama ke dalam formState
+                    formState = formState.copy(
+                        penjualanId = penjualan.penjualanId,
+                        produkId = penjualan.produkId,
+                        namaPembeli = penjualan.namaPembeli,
+                        jumlah = penjualan.jumlah.toString(),
+                        // Pastikan hargaSatuan didapat dari totalHarga / jumlah jika tidak ada di model
+                        hargaSatuan = if (penjualan.jumlah > 0) penjualan.totalHarga / penjualan.jumlah else 0,
+                        totalHarga = penjualan.totalHarga
+                    )
+                    penjualanFormUiState = PenjualanFormUiState.Idle
+                }
+                .onFailure { exception ->
+                    penjualanFormUiState = PenjualanFormUiState.Error(
+                        exception.message ?: "Gagal memuat data penjualan"
+                    )
+                }
+        }
+    }
+
     fun updateProdukId(produkId: Int, hargaSatuan: Int) {
         formState = formState.copy(
             produkId = produkId,

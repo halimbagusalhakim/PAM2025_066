@@ -36,23 +36,45 @@ class MerkFormViewModel(
     var formState by mutableStateOf(MerkFormState())
         private set
 
-    private val merkId: Int? = savedStateHandle[DestinasiMerkEdit.merkIdArg]
+    // Mengambil ID dari SavedStateHandle (dikirim lewat navigasi)
+    private val idDariNavigasi: Int? = savedStateHandle[DestinasiMerkEdit.merkIdArg]
 
-    init {
-        if (merkId != null) {
-            loadMerkData()
+    /**
+     * Fungsi untuk memuat data lama jika dalam mode EDIT.
+     * Dipanggil di dalam LaunchedEffect pada Screen.
+     */
+    fun loadDataUntukEdit(token: String) {
+        // Hanya dijalankan jika ada ID (mode edit) dan data namaMerk masih kosong (agar tidak re-fetch terus menerus)
+        if (idDariNavigasi != null && formState.namaMerk.isEmpty()) {
+            viewModelScope.launch {
+                merkFormUiState = MerkFormUiState.Loading
+
+                // Memanggil getAllMerk sesuai dengan fungsi di MerkRepository Anda
+                repositoryMerk.getAllMerk(token)
+                    .onSuccess { listMerk: List<MerkModel> ->
+                        // Cari data merk yang ID-nya cocok dengan idDariNavigasi
+                        val dataDitemukan = listMerk.find { it.merkId == idDariNavigasi }
+
+                        if (dataDitemukan != null) {
+                            formState = formState.copy(
+                                merkId = dataDitemukan.merkId,
+                                namaMerk = dataDitemukan.namaMerk
+                            )
+                            merkFormUiState = MerkFormUiState.Idle
+                        } else {
+                            merkFormUiState = MerkFormUiState.Error("Data merk tidak ditemukan")
+                        }
+                    }
+                    .onFailure { e ->
+                        merkFormUiState = MerkFormUiState.Error(e.message ?: "Gagal mengambil data")
+                    }
+            }
         }
     }
 
-    private fun loadMerkData() {
-        // Implementasi load data untuk edit jika diperlukan
-        // Untuk saat ini, merkId sudah tersimpan di formState
-        formState = formState.copy(merkId = merkId)
-    }
-
-    fun updateNamaMerk(namaMerk: String) {
+    fun updateNamaMerk(namaBaru: String) {
         formState = formState.copy(
-            namaMerk = namaMerk,
+            namaMerk = namaBaru,
             isNamaMerkError = false
         )
     }
@@ -63,35 +85,33 @@ class MerkFormViewModel(
         viewModelScope.launch {
             merkFormUiState = MerkFormUiState.Loading
 
-            val merk = MerkModel(
-                merkId = formState.merkId,
+            val dataMerk = MerkModel(
+                merkId = idDariNavigasi, // Menggunakan ID asli jika sedang edit
                 namaMerk = formState.namaMerk
             )
 
-            val result = if (formState.merkId == null) {
-                repositoryMerk.createMerk(token, merk)
+            // Jika idDariNavigasi null maka Create, jika ada maka Update
+            val hasil = if (idDariNavigasi == null) {
+                repositoryMerk.createMerk(token, dataMerk)
             } else {
-                repositoryMerk.updateMerk(token, merk)
+                repositoryMerk.updateMerk(token, dataMerk)
             }
 
-            result
-                .onSuccess {
-                    merkFormUiState = MerkFormUiState.Success
-                }
-                .onFailure { exception ->
-                    merkFormUiState = MerkFormUiState.Error(
-                        exception.message ?: "Gagal menyimpan merk"
-                    )
-                }
+            hasil.onSuccess {
+                merkFormUiState = MerkFormUiState.Success
+            }.onFailure { e ->
+                merkFormUiState = MerkFormUiState.Error(e.message ?: "Gagal menyimpan data")
+            }
         }
     }
 
     private fun validateInput(): Boolean {
-        if (formState.namaMerk.isBlank()) {
+        return if (formState.namaMerk.isBlank()) {
             formState = formState.copy(isNamaMerkError = true)
-            return false
+            false
+        } else {
+            true
         }
-        return true
     }
 
     fun resetState() {

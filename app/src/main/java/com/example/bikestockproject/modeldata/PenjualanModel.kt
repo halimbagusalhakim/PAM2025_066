@@ -31,8 +31,8 @@ data class PenjualanModel(
     @SerializedName("total_harga")
     val totalHarga: Int,
 
-    @SerializedName("tanggal_penjualan")
-    val tanggalPenjualan: String? = null
+    @SerializedName("tanggal")
+    val tanggal: String? = null
 )
 
 /**
