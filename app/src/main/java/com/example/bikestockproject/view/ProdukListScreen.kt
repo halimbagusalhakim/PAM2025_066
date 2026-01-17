@@ -47,7 +47,6 @@ fun ProdukListScreen(
     var produkToDelete by remember { mutableStateOf<ProdukModel?>(null) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // Warna Tema Konsisten
     val slate900 = Color(0xFF0F172A) // Teks & Judul
     val emerald600 = Color(0xFF059669) // Aksi Utama (Tombol Tambah)
     val softWhite = Color(0xFFF8FAFC) // Background
@@ -82,7 +81,6 @@ fun ProdukListScreen(
                         showDeleteDialog = false
                         token?.let { tkn -> produkToDelete?.produkId?.let { id -> viewModel.deleteProduk(tkn, id) } }
                     },
-                    // Menggunakan Emerald Green agar senada dengan tombol konfirmasi lainnya
                     colors = ButtonDefaults.buttonColors(containerColor = emerald600),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text("Ya, Hapus", color = Color.White) }
@@ -122,7 +120,6 @@ fun ProdukListScreen(
             if (merkId != null && merkName != null) {
                 ExtendedFloatingActionButton(
                     onClick = { navigateToProdukEntry(merkId, merkName) },
-                    // DIUBAH: Menggunakan emerald600 agar konsisten dengan tombol aksi lainnya
                     containerColor = emerald600,
                     contentColor = Color.White,
                     icon = { Icon(Icons.Default.Add, null) },
@@ -200,7 +197,6 @@ fun ProdukCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon Square Box
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = slateColor.copy(alpha = 0.05f),

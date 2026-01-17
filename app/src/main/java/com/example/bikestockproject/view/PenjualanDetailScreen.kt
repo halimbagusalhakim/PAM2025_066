@@ -90,7 +90,6 @@ fun PenjualanDetailScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(24.dp)
                     ) {
-                        // --- HEADER CARD (SLATE THEME) ---
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(28.dp),
@@ -151,7 +150,7 @@ fun PenjualanDetailScreen(
 
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        // --- ACTION BUTTONS (EMERALD) ---
+                        // --- ACTION BUTTONS
                         Button(
                             onClick = { navigateToPenjualanEdit(penjualan.penjualanId!!) },
                             modifier = Modifier.fillMaxWidth().height(60.dp),

@@ -101,7 +101,6 @@ fun PenjualanEntryScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(24.dp)
             ) {
-                // --- RINGKASAN HARGA CARD (SLATE THEME) ---
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(28.dp),
@@ -125,7 +124,6 @@ fun PenjualanEntryScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // --- FORM INPUT CARD ---
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
@@ -240,7 +238,6 @@ fun PenjualanEntryScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // --- TOMBOL SIMPAN (EMERALD) ---
                 Button(
                     onClick = { token?.let { viewModel.savePenjualan(it) } },
                     modifier = Modifier.fillMaxWidth().height(62.dp),

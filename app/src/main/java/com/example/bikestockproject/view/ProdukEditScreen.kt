@@ -40,7 +40,6 @@ fun ProdukEditScreen(
     val token by tokenManager.token.collectAsState(initial = null)
     var expandedMerk by remember { mutableStateOf(false) }
 
-    // Warna Tema Konsisten
     val slate900 = Color(0xFF0F172A) // Teks & Judul
     val emerald600 = Color(0xFF059669) // Aksi Utama (Hijau Emerald)
     val softWhite = Color(0xFFF8FAFC) // Background
@@ -207,7 +206,6 @@ fun ProdukEditScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // 4. Kontrol Stok Modern (Fungsionalitas Stepper Tetap)
                         Text(
                             "Update Stok Gudang",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),

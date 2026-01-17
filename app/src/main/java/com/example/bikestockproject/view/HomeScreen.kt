@@ -91,7 +91,6 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // --- HEADER MODERN SLATE (MIRIP SPLASH) ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,7 +122,6 @@ fun HomeScreen(
                         )
                     }
 
-                    // Logout Button dengan Aksen Emerald transparan
                     Surface(
                         onClick = { showLogoutDialog = true },
                         color = emeraldAccent.copy(alpha = 0.15f),
@@ -210,7 +208,7 @@ fun GridMenuCard(
         Column(
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start // Rata kiri lebih modern
+            horizontalAlignment = Alignment.Start
         ) {
             Surface(
                 shape = RoundedCornerShape(16.dp),

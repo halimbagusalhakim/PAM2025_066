@@ -200,7 +200,6 @@ fun PenjualanCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Inisial Pembeli dengan Style Bulat Slate
             Surface(
                 modifier = Modifier.size(54.dp),
                 shape = CircleShape,

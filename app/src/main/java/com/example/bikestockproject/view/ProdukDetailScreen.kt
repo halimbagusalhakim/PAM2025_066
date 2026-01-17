@@ -121,7 +121,6 @@ fun ProdukDetailScreen(
                             )
                         )
 
-                        // Harga (Menggunakan Slate agar tidak mengalihkan perhatian dari tombol aksi)
                         Text(
                             text = formatRupiah.format(produk.harga),
                             style = MaterialTheme.typography.headlineSmall.copy(
@@ -185,12 +184,10 @@ fun ProdukDetailScreen(
 
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        // Action Button (KONSISTEN EMERALD)
                         Button(
                             onClick = { navigateToProdukEdit(produk.produkId!!) },
                             modifier = Modifier.fillMaxWidth().height(62.dp),
                             shape = RoundedCornerShape(18.dp),
-                            // Diubah menjadi emerald600 agar konsisten dengan seluruh aplikasi
                             colors = ButtonDefaults.buttonColors(containerColor = emerald600),
                             elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
                         ) {

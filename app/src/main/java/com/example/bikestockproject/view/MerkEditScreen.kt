@@ -147,7 +147,6 @@ fun MerkEditScreen(
 
                 Spacer(modifier = Modifier.weight(1f)) // Mendorong tombol ke bawah
 
-                // Tombol Simpan (Konsisten Emerald)
                 Button(
                     onClick = { token?.let { viewModel.saveMerk(it) } },
                     modifier = Modifier

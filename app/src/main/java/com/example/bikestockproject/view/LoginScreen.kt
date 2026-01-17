@@ -175,7 +175,6 @@ fun LoginScreen(
                     )
                 }
 
-                // Bagian Lupa Password sudah dihapus untuk tampilan yang lebih minimalis
 
                 Spacer(modifier = Modifier.height(48.dp))
 
@@ -213,8 +212,6 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Opsional: Text bantuan di bawah jika user belum punya akun
-                // (Anda bisa menambahkan navigasi Register di sini nanti)
             }
         }
     }

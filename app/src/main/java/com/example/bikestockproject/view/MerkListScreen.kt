@@ -80,7 +80,7 @@ fun MerkListScreen(
                         showDeleteDialog = false
                         token?.let { t -> merkToDelete?.merkId?.let { id -> viewModel.deleteMerk(t, id) } }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = emerald600), // Tombol Konfirmasi Hijau
+                    colors = ButtonDefaults.buttonColors(containerColor = emerald600),
                     shape = RoundedCornerShape(12.dp)
                 ) { Text("Ya, Hapus", color = Color.White) }
             },
@@ -128,7 +128,7 @@ fun MerkListScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = navigateToMerkEntry,
-                containerColor = emerald600, // Tombol Tambah Hijau
+                containerColor = emerald600,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(16.dp),
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
@@ -229,7 +229,6 @@ fun MerkGridCard(
                 }
             }
 
-            // Lingkaran Ikon (Aksen Hijau Pudar)
             Surface(
                 shape = CircleShape,
                 color = accentColor.copy(alpha = 0.1f),
@@ -245,7 +244,6 @@ fun MerkGridCard(
                 }
             }
 
-            // Teks Nama Merk (Warna Hitam/Slate)
             Column(
                 modifier = Modifier.padding(bottom = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -262,7 +260,6 @@ fun MerkGridCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Badge Informasi (Netral Abu-abu)
                 Surface(
                     color = Color(0xFFF1F5F9),
                     shape = RoundedCornerShape(8.dp)

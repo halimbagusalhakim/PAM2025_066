@@ -107,7 +107,6 @@ fun PenjualanEditScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(24.dp)
             ) {
-                // --- RINGKASAN HARGA (SLATE THEME) ---
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(28.dp),
@@ -251,8 +250,6 @@ fun PenjualanEditScreen(
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Tombol Simpan (EMERALD)
                 Button(
                     onClick = { token?.let { viewModel.savePenjualan(it) } },
                     modifier = Modifier.fillMaxWidth().height(60.dp),

@@ -58,7 +58,6 @@ fun SplashScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Spacer bagian atas agar konten tengah lebih seimbang
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // --- CENTER CONTENT ---
@@ -67,7 +66,6 @@ fun SplashScreen(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.weight(1f)
                 ) {
-                    // CONTAINER LOGO (Gunakan Image jika sudah ada fotonya)
                     Surface(
                         modifier = Modifier.size(140.dp),
                         shape = RoundedCornerShape(40.dp),
@@ -75,7 +73,6 @@ fun SplashScreen(
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.1f))
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            // CARA PAKAI FOTO:
                             Image(
                                 painter = painterResource(id = R.drawable.logo_toko),
                                 contentDescription = "Logo",
@@ -110,7 +107,6 @@ fun SplashScreen(
                     )
                 }
 
-                // --- BOTTOM CONTENT (TOMBOL) ---
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -145,7 +141,6 @@ fun SplashScreen(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // Label Versi yang lebih estetik
                     Surface(
                         color = Color.White.copy(alpha = 0.05f),
                         shape = CircleShape
